@@ -1,4 +1,4 @@
-def call() {
+def pipeline_for_tests_and_clients() {
     // Let's execute an echo command
     
         def tagname
@@ -38,7 +38,7 @@ def call() {
                                                 ).replaceAll('\n', ', ')
                                     }
 
-                                    List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
+                                List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
 
                                     List<String> list_existing_tags_docker = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 

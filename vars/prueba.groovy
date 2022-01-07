@@ -2,7 +2,7 @@ def info(message) {
     echo "INFO: ${message}"
 }
 
-def pipeline_for_tests_and_clients() {
+def clients() {
     // Let's execute an echo command
     
         def tagname

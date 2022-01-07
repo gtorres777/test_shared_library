@@ -1,4 +1,4 @@
-def pipelinetest() {
+def call() {
     // Let's execute an echo command
     
         def tagname

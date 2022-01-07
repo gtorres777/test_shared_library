@@ -1,9 +1,4 @@
-def info(message) {
-    echo "INFO: ${message}"
-}
-
-def clients() {
-    // Let's execute an echo command
+def call() {
     
         def tagname
         def tagname_sanitized
@@ -30,7 +25,7 @@ def clients() {
                             }
 
                             script {
-                                existing_tags_github_repository = sh (
+                                    existing_tags_github_repository = sh (
                                         script: 'git tag',
                                         returnStdout: true
                                         ).replaceAll('\n', ', ')
@@ -42,7 +37,7 @@ def clients() {
                                                 ).replaceAll('\n', ', ')
                                     }
 
-                                List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
+                                    List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
 
                                     List<String> list_existing_tags_docker = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 
@@ -56,7 +51,7 @@ def clients() {
                                         echo 'The file version does not exist'
                                     }
 
-                                tagname = registry+"-$current_version"                     
+                                    tagname = registry+"-$current_version"                     
                                     tagname_sanitized = tagname.trim()
 
                                     tagname_for_github = "$BRANCH_NAME-$current_version"
@@ -67,15 +62,80 @@ def clients() {
                                         echo 'New Tag for Github Repository ---> '+ tagname_for_github
                                     }
 
-                                if (tagname_for_github.trim() in list_existing_tags_docker) {
-                                    error("Build failed because of the tagname for DockerHub already exists in the repository")
-                                } else {
-                                    echo 'New Tag for DockerHub Repository ---> '+ tagname_for_github
-                                }
+                                    if (tagname_for_github.trim() in list_existing_tags_docker) {
+                                        error("Build failed because of the tagname for DockerHub already exists in the repository")
+                                    } else {
+                                        echo 'New Tag for DockerHub Repository ---> '+ tagname_for_github
+                                    }
                             }
                         }
                     } 
 
+                    stage('Cloning our Repositories') { 
+                        steps { 
+
+                            withCredentials([gitUsernamePassword(credentialsId: 'odoopartnersid',
+                                        gitToolName: 'git-tool')]) {
+                                sh "chmod +x scripts/clone_repositories.sh" 
+                                    sh "./scripts/clone_repositories.sh 15-dev" 
+                            }
+                        }
+                    } 
+
+                    stage('Building Image') { 
+                        steps { 
+                            script { 
+                                docker.withRegistry( '', registryCredential ) { 
+                                    dockerImage = docker.build(tagname_sanitized, ".") 
+                                }
+
+                            }
+                        } 
+                    }
+
+                    stage('Publishing Image to Docker Hub') { 
+                        steps { 
+                            script { 
+                                docker.withRegistry( '', registryCredential ) { 
+                                    dockerImage.push() 
+                                }
+                            } 
+                        }
+                    } 
+                    stage('Cleaning up') { 
+                        steps { 
+                            sh "docker rmi $tagname" 
+                                sh "rm -rf repositories/"
+                        }
+                    } 
+
+                    stage('Creating and Pushing Tag for GitHub repository') { 
+                        steps { 
+                            withCredentials([gitUsernamePassword(credentialsId: 'odoopartnersid',
+                                        gitToolName: 'git-tool')]) {
+                                sh "git tag $tagname_for_github" 
+                                    sh "git push origin $tagname_for_github" 
+                            }
+                        }
+                    } 
+
+                    stage('Updating Image for deployment') { 
+                        steps {
+
+                            script {
+                                def branch_original_name = "$BRANCH_NAME"
+                                    basename = branch_original_name.substring(0, branch_original_name.lastIndexOf("-"))
+
+                            }
+
+                            sshagent(credentials: ['34.197.227.39']) {
+                                sh """ 
+                                    ssh -o StrictHostKeyChecking=no -l ubuntu 34.197.227.39 -A "kubectl -n odoo set image deployment/${BRANCH_NAME} odoo-${basename}=odoopartners/odoo:${tagname_for_github}" 
+                                    """
+                            }
+
+                        }
+                    }
 
                 }
 

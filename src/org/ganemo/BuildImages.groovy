@@ -1,10 +1,9 @@
 package org.ganemo
 
-class BuildImages {
-  
-  def sayHello(){
-    echo "HOLA"
-    return this
+class BuildImages implements Serializable {
+  def steps
+  Utilities(steps) {this.steps = steps}
+  def mvn(args) {
+    steps.echo "args"
   }
-
 }

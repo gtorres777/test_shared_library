@@ -17,7 +17,7 @@ class BuildImages implements Serializable {
   }
   
   def cloneRepositories(credentials) {
-    withCredentials([steps.gitUsernamePassword(credentialsId: "${credentials}",
+    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${credentials}",
                                         gitToolName: 'git-tool')]) {
       steps.sh "chmod +x scripts/clone_repositories.sh" 
       steps.sh "./scripts/clone_repositories.sh 15-dev" 

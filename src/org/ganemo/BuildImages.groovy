@@ -63,7 +63,7 @@ class BuildImages implements Serializable {
           echo 'New Tag for DockerHub Repository ---> '+ tagname_for_github
       }
 
-      return [existing_tags_github_repository, existing_tags_dockerhub_repository, tagname_sanitized, tagname, tagname_for_github]
+      return [tagname_sanitized, tagname, tagname_for_github]
 
 
   }

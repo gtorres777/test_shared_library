@@ -3,7 +3,19 @@ package org.ganemo
 class BuildImages implements Serializable {
   def steps
   BuildImages(steps) {this.steps = steps}
+  
   def mvn(args) {
-    echo "${args}"
+    steps.echo "${args}"
   }
+  
+  def cloneRepositories(String credentials){
+    withCredentials([gitUsernamePassword(credentialsId: '${credentials}',
+                                        gitToolName: 'git-tool')]) {
+      steps.sh "chmod +x scripts/clone_repositories.sh" 
+      steps.sh "./scripts/clone_repositories.sh 15-dev" 
+    }
+  
+  }
+  
 }
+

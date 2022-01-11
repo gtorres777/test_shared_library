@@ -31,7 +31,7 @@ class BuildImages implements Serializable {
     }
 
 
-    return existing_tags_github_repository
+    return existing_tags_github_repository, existing_tags_dockerhub_repository
 
 
   }

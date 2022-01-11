@@ -23,6 +23,8 @@ class BuildImages implements Serializable {
             returnStdout: true
             ).replaceAll('\n', ', ')
 
+    print("EN CLASS")
+    print(existing_tags_github_repository)
 
     return config.existing_tags_github_repository
 

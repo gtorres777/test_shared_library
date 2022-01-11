@@ -8,7 +8,11 @@ class BuildImages implements Serializable {
     steps.echo "${args}"
   }
   
-  def cloneRepositories(){
+  def aea() {
+    steps.echo "HOLAAA"
+  }
+  
+  def cloneRepositories() {
     withCredentials([gitUsernamePassword(credentialsId: 'odoopartnersid',
                                         gitToolName: 'git-tool')]) {
       steps.sh "chmod +x scripts/clone_repositories.sh" 

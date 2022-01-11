@@ -12,8 +12,18 @@ class BuildImages implements Serializable {
     steps.echo "${args}"
   }
   
-  def aea(args) {
-    steps.echo "HOLAAA ${args}"
+  def validateTag(Map config = [:]) {
+    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.credentials}',
+                                        gitToolName: 'git-tool')]) {
+      steps.sh "git fetch --all --tags"
+    }
+    
+    config.existing_tags_github_repository = steps.sh (
+            script: 'git tag',
+            returnStdout: true
+            ).replaceAll('\n', ', ')
+
+
   }
   
   def cloneRepositories(credentials) {

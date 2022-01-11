@@ -13,7 +13,7 @@ class BuildImages implements Serializable {
   }
   
   def validateTag(Map config = [:]) {
-    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.credentials}',
+    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.credentials}",
                                         gitToolName: 'git-tool')]) {
       steps.sh "git fetch --all --tags"
     }

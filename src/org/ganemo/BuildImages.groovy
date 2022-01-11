@@ -13,7 +13,7 @@ class BuildImages implements Serializable {
       def existing_tags_dockerhub_repository
       def existing_tags_github_repository
 
-      steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.credentials}",
+      steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                   gitToolName: 'git-tool')]) {
           steps.sh "git fetch --all --tags"
       }
@@ -68,11 +68,11 @@ class BuildImages implements Serializable {
 
   }
   
-  def cloneRepositories(credentials) {
-    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${credentials}",
+  def cloneRepositories(Map config = [:]) {
+    steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                                         gitToolName: 'git-tool')]) {
       steps.sh "chmod +x scripts/clone_repositories.sh" 
-      steps.sh "./scripts/clone_repositories.sh 15-dev" 
+      steps.sh "./scripts/clone_repositories.sh ${config.branch_to_clone}" 
     }
   
   }

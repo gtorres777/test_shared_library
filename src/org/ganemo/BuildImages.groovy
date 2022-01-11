@@ -46,7 +46,7 @@ class BuildImages implements Serializable {
       }
 
 
-      tagname = registry+"-$current_version"                     
+      tagname = "${config.registry}"+"-$current_version"                     
       tagname_sanitized = tagname.trim()
 
       tagname_for_github = "${config.BRANCH_NAME}-$current_version"

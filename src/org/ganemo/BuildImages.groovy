@@ -46,10 +46,10 @@ class BuildImages implements Serializable {
       }
 
 
-      tagname = "${config.registry}"+"-$current_version"                     
-      tagname_sanitized = tagname.trim()
+      def tagname = "${config.registry}"+"-$current_version"                     
+      def tagname_sanitized = tagname.trim()
 
-      tagname_for_github = "${config.BRANCH_NAME}-$current_version"
+      def tagname_for_github = "${config.BRANCH_NAME}-$current_version"
 
       if (tagname_for_github.trim() in list_existing_tags_github) {
           steps.error("Build failed because of the tagname for GitHub already exists in the repository")

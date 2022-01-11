@@ -35,8 +35,8 @@ class BuildImages implements Serializable {
       List<String> list_existing_tags_docker = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 
 
-      def exists = fileExists "${config.file_name}"
-      current_version = readFile "${config.file_name}"
+      def exists = steps.fileExists "${config.file_name}"
+      current_version = steps.readFile "${config.file_name}"
 
 
       if (exists) {

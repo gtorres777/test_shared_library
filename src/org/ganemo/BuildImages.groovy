@@ -24,6 +24,9 @@ class BuildImages implements Serializable {
             ).replaceAll('\n', ', ')
 
 
+    return config.existing_tags_github_repository
+
+
   }
   
   def cloneRepositories(credentials) {

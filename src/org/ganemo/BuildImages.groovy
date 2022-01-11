@@ -36,13 +36,13 @@ class BuildImages implements Serializable {
 
 
       def exists = steps.fileExists "${config.file_name}"
-      current_version = steps.readFile "${config.file_name}"
+      def current_version = steps.readFile "${config.file_name}"
 
 
       if (exists) {
-          echo 'VERSION --> '+current_version
+          steps.echo 'VERSION --> '+current_version
       } else {
-          echo 'The file version does not exist'
+          steps.echo 'The file version does not exist'
       }
 
 
@@ -52,15 +52,15 @@ class BuildImages implements Serializable {
       tagname_for_github = "${config.BRANCH_NAME}-$current_version"
 
       if (tagname_for_github.trim() in list_existing_tags_github) {
-          error("Build failed because of the tagname for GitHub already exists in the repository")
+          steps.error("Build failed because of the tagname for GitHub already exists in the repository")
       } else {
-          echo 'New Tag for Github Repository ---> '+ tagname_for_github
+          steps.echo 'New Tag for Github Repository ---> '+ tagname_for_github
       }
 
       if (tagname_for_github.trim() in list_existing_tags_docker) {
-          error("Build failed because of the tagname for DockerHub already exists in the repository")
+          steps.error("Build failed because of the tagname for DockerHub already exists in the repository")
       } else {
-          echo 'New Tag for DockerHub Repository ---> '+ tagname_for_github
+          steps.echo 'New Tag for DockerHub Repository ---> '+ tagname_for_github
       }
 
       return [tagname_sanitized, tagname, tagname_for_github]

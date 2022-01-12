@@ -1,6 +1,6 @@
 package org.ganemo
 
-import test_shared_library.vars
+import loadLinuxScript
 
 
 class BuildImages implements Serializable {

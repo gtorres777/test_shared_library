@@ -65,7 +65,7 @@ function check_status_extra_repositories() {
   EXTRA_MAIN_DIRECTORY="$1"
   EXTRA_REPOS_CSV="$2"
   VERSION="$3"
-  python3 scripts/check_repos_extra.py "${EXTRA_MAIN_DIRECTORY}" "${EXTRA_REPOS_CSV}" "$VERSION"
+  python3 check_repos_extra.py "${EXTRA_MAIN_DIRECTORY}" "${EXTRA_REPOS_CSV}" "$VERSION"
 }
 
 odoo_base_directory="repositories"

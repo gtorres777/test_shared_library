@@ -1,6 +1,5 @@
 package org.ganemo
 
-import *
 
 class BuildImages implements Serializable {
 
@@ -75,8 +74,8 @@ class BuildImages implements Serializable {
         steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                     gitToolName: 'git-tool')]) {
             
-            loadLinuxScript(name: 'clone_repositories.sh')
-            loadPythonScript(name: 'check_repos_extra.py')
+            steps.loadLinuxScript(name: 'clone_repositories.sh')
+            steps.loadPythonScript(name: 'check_repos_extra.py')
             steps.sh "./clone_repositories.sh ${config.branch_to_clone}" 
         }
     }

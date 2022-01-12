@@ -1,5 +1,6 @@
 package org.ganemo
 
+
 class BuildImages implements Serializable {
 
     def steps
@@ -72,8 +73,10 @@ class BuildImages implements Serializable {
     def cloneRepositories(Map config = [:]) {
         steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                     gitToolName: 'git-tool')]) {
-            steps.sh "chmod +x scripts/clone_repositories.sh" 
-            steps.sh "./scripts/clone_repositories.sh ${config.branch_to_clone}" 
+            
+            loadLinuxScript(name: 'clone_repositories.sh')
+            loadPythonScript(name: 'check_repos_extra.py')
+            steps.sh "./clone_repositories.sh ${config.branch_to_clone}" 
         }
     }
 

@@ -94,7 +94,7 @@ class BuildImages implements Serializable {
 
 
         steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
-            steps."${config.dockerImage}".push() 
+            steps.dockerImage.push() 
         }
 
     }

@@ -1,5 +1,7 @@
 package org.ganemo
 
+import test_shared_library.vars
+
 
 class BuildImages implements Serializable {
 

@@ -60,14 +60,24 @@ check_status_directory "$odoo_non_ent_directory"
 
 if [[ $branch_odoo_version == *"dev"* ]]; 
 then
-
 	clone_repositories "$odoo_base_directory" "$all_repos" "$branch_odoo_version" "true"
-    check_status_non_ent_repositories "$odoo_non_ent_directory" "$odoo_base_oca_directory" "$non_ent_repos"
+    if [[ -f $non_ent_repos ]];
+    then
+        check_status_non_ent_repositories "$odoo_non_ent_directory" "$odoo_base_oca_directory" "$non_ent_repos"
+    else
+        echo "Not evaluating non_ent repos"
+    fi
 
 else
 
 	clone_repositories "$odoo_base_directory" "$all_repos" "$branch_odoo_version" "false"
-    check_status_non_ent_repositories "$odoo_non_ent_directory" "$odoo_base_oca_directory" "$non_ent_repos"
+
+    if [[ -f $non_ent_repos ]];
+    then
+        check_status_non_ent_repositories "$odoo_non_ent_directory" "$odoo_base_oca_directory" "$non_ent_repos"
+    else
+        echo "Not evaluating non_ent repos"
+    fi
 
 fi
 

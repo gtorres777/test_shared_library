@@ -15,6 +15,8 @@ class BuildImages implements Serializable {
         
         def current_version
 
+        def aea
+
         steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                     gitToolName: 'git-tool')]) {
             steps.sh "git fetch --all --tags"
@@ -27,7 +29,6 @@ class BuildImages implements Serializable {
 
 
         steps.withCredentials([steps.usernamePassword(credentialsId: "${config.registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            def aea
             aea="$USERNAME" 
             existing_tags_dockerhub_repository = steps.sh (
                     script: """ 

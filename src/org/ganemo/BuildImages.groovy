@@ -165,10 +165,22 @@ class BuildImages implements Serializable {
         def branch_original_name = "${config.BRANCH_NAME}"
         def basename = branch_original_name.substring(0, branch_original_name.lastIndexOf("-"))
 
-        steps.sshagent(credentials: ["${config.k8s_credentials}"]) {
-            steps.sh """ 
-                ssh -o StrictHostKeyChecking=no -l ubuntu "${config.ip_from_master_node}" -A "kubectl -n odoo set image deployment/${config.BRANCH_NAME} odoo-${basename}=odoopartners/${config.repo_name}:${config.tagname_for_github}" 
-                """
+        if (config.repo_name != null && !config.repo_name.isEmpty()){
+
+            steps.sshagent(credentials: ["${config.k8s_credentials}"]) {
+                steps.sh """ 
+                    ssh -o StrictHostKeyChecking=no -l ubuntu "${config.ip_from_master_node}" -A "kubectl -n odoo set image deployment/${config.BRANCH_NAME} odoo-${basename}=odoopartners/${config.repo_name}:${config.tagname_for_github}" 
+                    """
+            }
+
+        } else {
+
+            steps.sshagent(credentials: ["${config.k8s_credentials}"]) {
+                steps.sh """ 
+                    ssh -o StrictHostKeyChecking=no -l ubuntu "${config.ip_from_master_node}" -A "kubectl -n odoo set image deployment/${config.BRANCH_NAME} odoo-${basename}=odoopartners/odoo:${config.tagname_for_github}" 
+                    """
+            }
+
         }
 
     }

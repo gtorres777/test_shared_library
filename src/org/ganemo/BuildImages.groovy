@@ -25,20 +25,9 @@ class BuildImages implements Serializable {
             returnStdout: true
         ).replaceAll('\n', ', ')
 
-
         steps.withCredentials([steps.usernamePassword(credentialsId: "${config.registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             existing_tags_dockerhub_repository = steps.sh (
-                    script: """ 
-                            echo \$USERNAME 
-                            echo \"${config.repo_name}\" 
-                            """,
-                    returnStdout: true
-                    ).replaceAll('\n', ', ')
-        }
-
-        steps.withCredentials([steps.usernamePassword(credentialsId: "${config.registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            existing_tags_dockerhub_repository = steps.sh (
-                    script: ''' wget -q --user "$USERNAME" --password "$PASSWORD" \"https://registry.hub.docker.com/v1/repositories/odoopartners/odoo/tags\" -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print $3}' ''',
+                    script: """ wget -q --user \$USERNAME --password \$PASSWORD https://registry.hub.docker.com/v1/repositories/odoopartners/${config.repo_name}/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print $3}' """,
                     returnStdout: true
                     ).replaceAll('\n', ', ')
         }

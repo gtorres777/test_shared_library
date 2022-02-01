@@ -28,7 +28,7 @@ class BuildImages implements Serializable {
         def aea 
 
         steps.withCredentials([steps.usernamePassword(credentialsId: "${config.registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            USERNAME = aea 
+            aea = USERNAME 
             existing_tags_dockerhub_repository = steps.sh (
                     script: " echo ${aea} && echo \"${config.repo_name}\" ",
                     returnStdout: true

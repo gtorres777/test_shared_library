@@ -30,8 +30,7 @@ class BuildImages implements Serializable {
             aea = USERNAME 
             existing_tags_dockerhub_repository = steps.sh (
                     script: """ 
-                            crd=${USERNAME}
-                            echo $crd 
+                            echo \"${USERNAME}\" 
                             echo \"${config.repo_name}\" 
                             """,
                     returnStdout: true

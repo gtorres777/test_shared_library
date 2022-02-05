@@ -133,7 +133,7 @@ class BuildImages implements Serializable {
 
         def list_base_images = list_existing_tags_github.findAll { it.contains("15.0") }
 
-        steps.echo "${list_base_images}"
+        steps.echo "${list_existing_tags_github}"
 
         def last_version = list_base_images[-1]
 

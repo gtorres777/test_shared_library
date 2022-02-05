@@ -140,7 +140,7 @@ class BuildImages implements Serializable {
         def last_base_image = last_version
 
         steps.sh """ sed -i "1 s|.*|FROM ${last_base_image} as base|" Dockerfile """
-" 
+ 
 
         steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
             dockerImage = steps.docker.build("${config.tagname_sanitized}", ".") 

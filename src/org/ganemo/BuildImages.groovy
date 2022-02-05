@@ -136,7 +136,7 @@ class BuildImages implements Serializable {
         
         List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
 
-        def list_base_images = list_existing_tags_github.findAll { it.contains("15.0") }
+        def list_base_images = list_existing_tags_github.findAll { it.contains("${config.odoo_version}") }
 
         steps.echo "${list_base_images}"
 

@@ -15,8 +15,6 @@ class BuildImages implements Serializable {
         
         def current_version
 
-        def repo_name = "${config.repo_name}"
-
         steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
                     gitToolName: 'git-tool')]) {
             steps.sh "git fetch --all --tags"
@@ -122,6 +120,27 @@ class BuildImages implements Serializable {
     def buildImage(Map config = [:]) {
 
         def dockerImage
+
+
+        def existing_tags_github_repository
+
+        existing_tags_github_repository = steps.sh (
+            script: 'git tag',
+            returnStdout: true
+        ).replaceAll('\n', ', ')
+        
+        List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
+
+        def list_base_images = list_existing_tags_github.findAll { it.contains("15.0") }
+
+        steps.echo "${list_base_images}"
+
+        def last_version = list_base_images[-1]
+
+        def last_base_image = last_version
+
+        steps.sh """ sed -i "1 s|.*|FROM ${last_base_image} as base|" Dockerfile """
+" 
 
         steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
             dockerImage = steps.docker.build("${config.tagname_sanitized}", ".") 

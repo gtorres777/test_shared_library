@@ -144,9 +144,9 @@ class BuildImages implements Serializable {
 
         def last_base_image = last_version
 
-        steps.echo "${last_base_image}"
+        steps.echo "Base image used --> ${last_base_image}"
 
-        steps.sh """ sed -i "1 s|.*|FROM ${last_base_image} as base|" Dockerfile """
+        steps.sh """ sed -i "1 s|.*|FROM odoopartners/odoo:${last_base_image} as base|" Dockerfile """
  
 
         steps.docker.withRegistry( '', "${config.registryCredential}" ) { 

@@ -124,6 +124,11 @@ class BuildImages implements Serializable {
 
         def existing_tags_github_repository
 
+        steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
+                    gitToolName: 'git-tool')]) {
+            steps.sh "git fetch --all --tags"
+        }
+
         existing_tags_github_repository = steps.sh (
             script: 'git tag',
             returnStdout: true
@@ -133,11 +138,13 @@ class BuildImages implements Serializable {
 
         def list_base_images = list_existing_tags_github.findAll { it.contains("15.0") }
 
-        steps.echo "${list_existing_tags_github}"
+        steps.echo "${list_base_images}"
 
         def last_version = list_base_images[-1]
 
         def last_base_image = last_version
+
+        steps.echo "${last_base_image}"
 
         steps.sh """ sed -i "1 s|.*|FROM ${last_base_image} as base|" Dockerfile """
  

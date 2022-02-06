@@ -122,38 +122,51 @@ class BuildImages implements Serializable {
         def dockerImage
 
 
-        def existing_tags_github_repository
+        if (config.git_credentials != null && !config.git_credentials.isEmpty()){
 
-        steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
-                    gitToolName: 'git-tool')]) {
-            steps.sh "git fetch --all --tags"
+            def existing_tags_github_repository
+
+            steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
+                        gitToolName: 'git-tool')]) {
+                steps.sh "git fetch --all --tags"
+            }
+
+            existing_tags_github_repository = steps.sh (
+                script: 'git tag',
+                returnStdout: true
+            ).replaceAll('\n', ', ')
+            
+            List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
+
+            def list_base_images = list_existing_tags_github.findAll { it.contains("${config.odoo_version}") }
+
+            steps.echo "${list_base_images}"
+
+            def last_version = list_base_images[-1]
+
+            def last_base_image = last_version
+
+            steps.echo "Base image used --> ${last_base_image}"
+
+            steps.sh """ sed -i "1 s|.*|FROM odoopartners/odoo:${last_base_image} as base|" Dockerfile """
+     
+
+            steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
+                dockerImage = steps.docker.build("${config.tagname_sanitized}", ".") 
+            }
+
+            return dockerImage
+
+        } else {
+
+            steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
+                dockerImage = steps.docker.build("${config.tagname_sanitized}", ".") 
+            }
+
+            return dockerImage
+
         }
 
-        existing_tags_github_repository = steps.sh (
-            script: 'git tag',
-            returnStdout: true
-        ).replaceAll('\n', ', ')
-        
-        List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
-
-        def list_base_images = list_existing_tags_github.findAll { it.contains("${config.odoo_version}") }
-
-        steps.echo "${list_base_images}"
-
-        def last_version = list_base_images[-1]
-
-        def last_base_image = last_version
-
-        steps.echo "Base image used --> ${last_base_image}"
-
-        steps.sh """ sed -i "1 s|.*|FROM odoopartners/odoo:${last_base_image} as base|" Dockerfile """
- 
-
-        steps.docker.withRegistry( '', "${config.registryCredential}" ) { 
-            dockerImage = steps.docker.build("${config.tagname_sanitized}", ".") 
-        }
-
-        return dockerImage
 
     }
 

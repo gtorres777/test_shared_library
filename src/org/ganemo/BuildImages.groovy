@@ -138,6 +138,8 @@ class BuildImages implements Serializable {
                 }
             }
 
+            steps.echo "LIST OF repsonse ${existing_tags_dockerhub_repository}"
+
             
             List<String> list_existing_tags = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 

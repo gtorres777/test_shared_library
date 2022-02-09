@@ -135,7 +135,7 @@ class BuildImages implements Serializable {
                             returnStdout: true
                             ).replaceAll('\n', ', ')
 
-                    if (config.existing_tags_dockerhub_repository != null && !existing_tags_dockerhub_repository.isEmpty()){
+                    if (existing_tags_dockerhub_repository != null && !existing_tags_dockerhub_repository.isEmpty()){
                         return true
                     }else{
                         return false

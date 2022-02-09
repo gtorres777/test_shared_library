@@ -136,18 +136,16 @@ class BuildImages implements Serializable {
                             ).replaceAll('\n', ', ')
 
                     if (config.existing_tags_dockerhub_repository != null && !existing_tags_dockerhub_repository.isEmpty()){
-                        return false
-
-                    }else{
                         return true
+                    }else{
+                        return false
 
                     }
 
                 }
             }
 
-            steps.echo "LIST OF repsonse ${existing_tags_dockerhub_repository}"
-
+            steps.echo "List of images from dockerhub reponse ${existing_tags_dockerhub_repository}"
             
             List<String> list_existing_tags = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 

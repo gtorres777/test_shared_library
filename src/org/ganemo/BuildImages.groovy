@@ -124,21 +124,24 @@ class BuildImages implements Serializable {
 
         if (config.git_credentials != null && !config.git_credentials.isEmpty()){
 
-            def existing_tags_github_repository
 
-            steps.withCredentials([steps.gitUsernamePassword(credentialsId: "${config.git_credentials}",
-                        gitToolName: 'git-tool')]) {
-                steps.sh "git fetch --all --tags"
+            def existing_tags_dockerhub_repository
+
+            steps.withCredentials([steps.usernamePassword(credentialsId: "${config.registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+
+                steps.waitUntil{
+                    existing_tags_dockerhub_repository = steps.sh (
+                            script: """ wget -q --user \$USERNAME --password \$PASSWORD https://registry.hub.docker.com/v1/repositories/odoopartners/odoo/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | awk -F: '{print \$3}' """,
+                            returnStdout: true
+                            ).replaceAll('\n', ', ')
+
+                }
             }
 
-            existing_tags_github_repository = steps.sh (
-                script: 'git tag',
-                returnStdout: true
-            ).replaceAll('\n', ', ')
             
-            List<String> list_existing_tags_github = Arrays.asList(existing_tags_github_repository.split("\\s*,\\s*"))
+            List<String> list_existing_tags = Arrays.asList(existing_tags_dockerhub_repository.split("\\s*,\\s*"))
 
-            def list_base_images = list_existing_tags_github.findAll { it.contains("${config.odoo_version}") }
+            def list_base_images = list_existing_tags.findAll { it.contains("${config.odoo_version}") }
 
             steps.echo "${list_base_images}"
 

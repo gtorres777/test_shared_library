@@ -122,7 +122,7 @@ class BuildImages implements Serializable {
         def dockerImage
 
 
-        if (config.git_credentials != null && !config.git_credentials.isEmpty()){
+        if (config.odoo_version != null && !config.odoo_version.isEmpty()){
 
 
             def existing_tags_dockerhub_repository

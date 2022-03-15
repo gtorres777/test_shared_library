@@ -57,7 +57,11 @@ class BuildImages implements Serializable {
             
             def last_tag = list_existing_tags_github.findAll { it.contains("${config.BRANCH_NAME}") }
 
-            def last_version = last_tag[-1].split('-')[-1]
+            def only_versions = last_tag.collect { it.minus("${config.BRANCH_NAME}-") }
+
+
+            def last_version = mostRecentVersion(only_versions)
+
 		
 	    steps.echo "LIST TAGS ---> ${last_tag}"
 	    steps.echo "Last version ---> ${last_version}"
@@ -103,6 +107,7 @@ class BuildImages implements Serializable {
 
 
     }
+
     
 
     def cloneRepositories(Map config = [:]) {
@@ -123,7 +128,6 @@ class BuildImages implements Serializable {
 
 
         if (config.odoo_version != null && !config.odoo_version.isEmpty()){
-
 
             def existing_tags_dockerhub_repository
 
@@ -151,11 +155,13 @@ class BuildImages implements Serializable {
 
             def list_base_images = list_existing_tags.findAll { it.contains("${config.odoo_version}") }
 
+            def only_versions = list_base_images.collect { it.minus("${config.odoo_version}-") }
+
             steps.echo "${list_base_images}"
 
-            def last_version = list_base_images[-1]
+            def last_version = mostRecentVersion(only_versions)
 
-            def last_base_image = last_version
+            def last_base_image = "${config.odoo_version}-${last_version}"
 
             steps.echo "Base image used --> ${last_base_image}"
 
@@ -177,7 +183,6 @@ class BuildImages implements Serializable {
             return dockerImage
 
         }
-
 
     }
 
@@ -235,6 +240,7 @@ class BuildImages implements Serializable {
 
     }
 
+
     def getTagFromProduction(Map config = [:]) {
 
         def existing_tags_github_repository
@@ -256,7 +262,9 @@ class BuildImages implements Serializable {
 
 		def production_tags = list_existing_tags_github.findAll { it.contains("${config.prod_deploy_name}") }
 
-		def last_prod_tag_version = production_tags[-1].split('-')[-1]
+		def only_versions = production_tags.collect { it.minus("${config.prod_deploy_name}-") }
+
+        def last_prod_tag_version = mostRecentVersion(only_versions)
 
         steps.echo "lastprodtagversion"
         steps.echo "${last_prod_tag_version}"
@@ -273,6 +281,7 @@ class BuildImages implements Serializable {
 
 
     }
+    
 
     def updateImageForDev(Map config = [:]){
 
@@ -303,7 +312,7 @@ class BuildImages implements Serializable {
             }
 
     }
-    
+
     // Extra functions 
     
     def increaseVersion(String version){
@@ -386,6 +395,39 @@ class BuildImages implements Serializable {
 
     }
 
+    @NonCPS
+    def mostRecentVersion(List versions) {
+      def sorted = versions.sort(false) { a, b -> 
+
+        List verA = a.tokenize('.')
+        List verB = b.tokenize('.')
+
+         
+        def commonIndices = Math.min(verA.size(), verB.size())
+
+        
+        for (int i = 0; i < commonIndices; ++i) {
+          def numA = verA[i].toInteger()
+          def numB = verB[i].toInteger()
+
+          
+          if (numA != numB) {
+            return numA <=> numB
+          }
+        }
+        
+        // If we got this far then all the common indices are identical, so whichever version is longer must be more recent
+        verA.size() <=> verB.size()
+      }
+      
+      return sorted[-1]
+    }
+
     
 
 }
+
+
+
+
+

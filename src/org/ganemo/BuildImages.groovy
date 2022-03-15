@@ -273,6 +273,36 @@ class BuildImages implements Serializable {
 
 
     }
+
+    def updateImageForDev(Map config = [:]){
+
+        def img_used
+        def list_of_current_images
+
+        steps.sshagent(credentials: ['34.197.227.39']) {
+
+            img_used = steps.sh (
+                    script: 'ssh -o StrictHostKeyChecking=no -l ubuntu 34.197.227.39 -A " kubectl get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}" " ',
+                    returnStdout: true
+                    ).replaceAll(' ', ', ')
+
+        }
+
+        list_of_current_images = Arrays.asList(img_used.split("\\s*,\\s*"))
+
+            if ("${config.build_tag}" in list_of_current_images){
+
+                steps.sshagent(credentials: ['34.197.227.39']) {
+                    steps.sh """ 
+                        ssh -o StrictHostKeyChecking=no -l ubuntu 34.197.227.39 -A "kubectl rollout restart deployment ${config.deploy_name} -n odoo" 
+                        """
+                }
+
+            } else {
+                updateImageDeployment(BRANCH_NAME:"${config.deploy_name}",k8s_credentials:"34.197.227.39",ip_from_master_node:"34.197.227.39",tagname_for_github:"${config.tag_for_test}",repo_name:"${config.repo_name}")
+            }
+
+    }
     
     // Extra functions 
     

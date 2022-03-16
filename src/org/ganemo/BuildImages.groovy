@@ -299,22 +299,8 @@ class BuildImages implements Serializable {
 
         list_of_current_images = Arrays.asList(img_used.split("\\s*,\\s*"))
 
-        steps.echo "list_of_current_images"
-        steps.echo "${list_of_current_images}"
 
-        steps.echo "build_tag"
-        steps.echo "${config.build_tag}"
-
-        if(config.build_tag.toString() in list_of_current_images){
-                steps.echo "ENTRO"
-        }else{
-            steps.echo "NO EnTRO"
-            steps.echo "${config.build_tag.getClass()}"
-            steps.echo "${config.build_tag.toString().getClass()}"
-            steps.echo "${list_of_current_images.getClass()}"
-        }
-
-        if (config.build_tag in list_of_current_images){
+        if (config.build_tag.toString() in list_of_current_images){
 
             steps.sshagent(credentials: ['34.197.227.39']) {
                 steps.sh """ 

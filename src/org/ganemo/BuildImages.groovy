@@ -309,8 +309,6 @@ class BuildImages implements Serializable {
             }
 
         } else {
-            steps.echo "ENTRO AL ELSE"
-                steps.echo "${config.build_tag}"
                 updateImageDeployment(BRANCH_NAME:"${config.deploy_name}",k8s_credentials:"34.197.227.39",ip_from_master_node:"34.197.227.39",tagname_for_github:"${config.tag_for_test}",repo_name:"${config.repo_name}")
         }
 

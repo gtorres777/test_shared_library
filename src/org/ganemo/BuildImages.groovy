@@ -305,7 +305,7 @@ class BuildImages implements Serializable {
         steps.echo "build_tag"
         steps.echo "${config.build_tag}"
 
-            if ("${config.build_tag}" in list_of_current_images){
+            if (config.build_tag in list_of_current_images){
 
                 steps.sshagent(credentials: ['34.197.227.39']) {
                     steps.sh """ 

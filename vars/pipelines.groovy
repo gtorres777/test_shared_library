@@ -1,6 +1,7 @@
+import org.ganemo.BuildImages
+
 def call(Map config = [:]) {
 
-    import org.ganemo.BuildImages
 
     def utils = new BuildImages(this)
 

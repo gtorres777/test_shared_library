@@ -305,11 +305,12 @@ class BuildImages implements Serializable {
         steps.echo "build_tag"
         steps.echo "${config.build_tag}"
 
-        if(config.build_tag in list_of_current_images){
+        if("${'config.build_tag'}" in list_of_current_images){
                 steps.echo "ENTRO"
         }else{
             steps.echo "NO EnTRO"
             steps.echo "${config.build_tag.getClass()}"
+            steps.echo config.build_tag.getClass()
             steps.echo "${list_of_current_images.getClass()}"
         }
 

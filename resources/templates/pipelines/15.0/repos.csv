@@ -1,0 +1,15 @@
+repos_own,https://github.com/odoopartners/odoo_contact,odoo_contact
+repos_own,https://github.com/odoopartners/odoo_invoicing,odoo_invoicing
+repos_own,https://github.com/odoopartners/odoo_edocument,odoo_edocument
+repos_own,https://github.com/odoopartners/odoo_third_apps_contacts,odoo_third_apps_contacts
+repos_own,https://github.com/odoopartners/odoo_third_apps_financial,odoo_third_apps_financial
+repos_own,https://github.com/odoopartners/odoo_third_apps_hr,odoo_third_apps_hr
+repos_own,https://github.com/odoopartners/odoo_third_apps_logistics,odoo_third_apps_logistics
+repos_own,https://github.com/odoopartners/odoo_third_apps_payroll,odoo_third_apps_payroll
+repos_own,https://github.com/odoopartners/odoo_third_apps_pos,odoo_third_apps_pos
+repos_own,https://github.com/odoopartners/odoo_third_apps_products,odoo_third_apps_products
+repos_own,https://github.com/odoopartners/odoo_third_apps_projects,odoo_third_apps_projects
+repos_own,https://github.com/odoopartners/odoo_third_apps_purchase,odoo_third_apps_purchase
+repos_own,https://github.com/odoopartners/odoo_third_apps_server-tools,odoo_third_apps_server-tools
+repos_oca,https://github.com/OCA/brand,brand
+repos_oca,https://github.com/OCA/web,web

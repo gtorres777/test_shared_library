@@ -9,7 +9,7 @@ terraform {
 
 # Configure the GitHub Provider
 provider "github" {
-    token = "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"
+    token = "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"
 }
 
 resource "github_repository" "test_customer" {
@@ -83,23 +83,5 @@ resource "github_repository_file" "repos-test" {
   file                = "repos.csv"
   content             = file("repos.csv")
   commit_message      = "repos for test and prod"
-  overwrite_on_create = true
-}
-
-resource "github_repository_file" "terraform-state" {
-  repository          = github_repository.test_customer.name
-  branch              = github_branch.prodbranch.branch
-  file                = "terraform.tfstate"
-  content             = file("terraform.tfstate")
-  commit_message      = "terraform state file"
-  overwrite_on_create = true
-}
-
-resource "github_repository_file" "terraform-state-backup" {
-  repository          = github_repository.test_customer.name
-  branch              = github_branch.prodbranch.branch
-  file                = "terraform.tfstate.backup"
-  content             = file("terraform.tfstate.backup")
-  commit_message      = "terraform backup state file"
   overwrite_on_create = true
 }

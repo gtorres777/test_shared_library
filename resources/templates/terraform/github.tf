@@ -85,3 +85,21 @@ resource "github_repository_file" "repos-test" {
   commit_message      = "repos for test and prod"
   overwrite_on_create = true
 }
+
+resource "github_repository_file" "terraform-state" {
+  repository          = github_repository.test_customer.name
+  branch              = github_branch.prodbranch.branch
+  file                = "terraform.tfstate"
+  content             = file("terraform.tfstate")
+  commit_message      = "terraform state file"
+  overwrite_on_create = true
+}
+
+resource "github_repository_file" "terraform-state-backup" {
+  repository          = github_repository.test_customer.name
+  branch              = github_branch.prodbranch.branch
+  file                = "terraform.tfstate.backup"
+  content             = file("terraform.tfstate.backup")
+  commit_message      = "terraform backup state file"
+  overwrite_on_create = true
+}

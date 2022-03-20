@@ -12,7 +12,7 @@ provider "github" {
   token = var.github_token
 }
 
-resource "github_repository" var.customer_name {
+resource "github_repository" "customer_name" {
   name        = var.customer_name
   description = "Repository created with terraform to test customers"
 
@@ -21,17 +21,17 @@ resource "github_repository" var.customer_name {
 
 }
 resource "github_branch" "prodbranch" {
-  repository = github_repository.var.customer_name.name
+  repository = github_repository.customer_name.name
   branch     = var.odoo_version
 }
 
 resource "github_branch" "testbranch" {
-  repository = github_repository.var.customer_name.name
+  repository = github_repository.customer_name.name
   branch     = var.test_branch
 }
 
 resource "github_repository_file" "jenkinsfile-prod" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.prodbranch.branch
   file                = "Jenkinsfile"
   content             = file("Jenkinsfile.prod")
@@ -40,7 +40,7 @@ resource "github_repository_file" "jenkinsfile-prod" {
 }
 
 resource "github_repository_file" "jenkinsfile-test" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.testbranch.branch
   file                = "Jenkinsfile"
   content             = file("Jenkinsfile.test")
@@ -49,7 +49,7 @@ resource "github_repository_file" "jenkinsfile-test" {
 }
 
 resource "github_repository_file" "dockerfile-prod" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.prodbranch.branch
   file                = "Dockerfile"
   content             = file("Dockerfile")
@@ -59,7 +59,7 @@ resource "github_repository_file" "dockerfile-prod" {
 
 
 resource "github_repository_file" "dockerfile-test" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.testbranch.branch
   file                = "Dockerfile"
   content             = file("Dockerfile")
@@ -68,7 +68,7 @@ resource "github_repository_file" "dockerfile-test" {
 }
 
 resource "github_repository_file" "repos-prod" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.prodbranch.branch
   file                = "repos.csv"
   content             = file("repos.csv")
@@ -78,7 +78,7 @@ resource "github_repository_file" "repos-prod" {
 
 
 resource "github_repository_file" "repos-test" {
-  repository          = github_repository.var.customer_name.name
+  repository          = github_repository.customer_name.name
   branch              = github_branch.testbranch.branch
   file                = "repos.csv"
   content             = file("repos.csv")

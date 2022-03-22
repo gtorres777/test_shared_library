@@ -19,7 +19,7 @@ resource "github_repository_file" "terraform_state" {
   repository          = data.github_repository.customer_name.name
   branch              = var.odoo_version
   file                = "state_files/terraform.tfstate"
-  content             = file("../terraform.tfstate")
+  content             = file("/var/lib/jenkins/workspace/CUSTOMER_PIPELINES/testdepliegue/terraform.tfstate")
   commit_message      = "terraform state file"
   overwrite_on_create = true
 
@@ -30,7 +30,7 @@ resource "github_repository_file" "terraform_state_lock" {
   repository          = data.github_repository.customer_name.name
   branch              = var.odoo_version
   file                = "state_files/.terraform.lock.hcl"
-  content             = file("../.terraform.lock.hcl")
+  content             = file("/var/lib/jenkins/workspace/CUSTOMER_PIPELINES/testdepliegue/.terraform.lock.hcl")
   commit_message      = "terraform state file"
   overwrite_on_create = true
 

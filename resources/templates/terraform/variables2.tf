@@ -6,6 +6,6 @@ variable "customer_name" {
   description = "Customer deployment name."
 }
 
-variable "odoo_version" {
+variable "app_name" {
   description = "Odoo version for the customer."
 }

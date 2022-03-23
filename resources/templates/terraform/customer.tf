@@ -1,13 +1,27 @@
 terraform {
+
   required_providers {
     github = {
       source  = "integrations/github"
       version = "~> 4.0"
     }
+
+    dockerhub = {
+      source = "magenta-aps/dockerhub"
+      version = "0.0.14"
+    }
+
+    jenkins = {
+      source = "taiidani/jenkins"
+      version = "0.9.0"
+    }
   }
+
 }
 
-# Configure the GitHub Provider
+
+# GITHUB
+
 provider "github" {
   token = var.github_token
 }
@@ -84,5 +98,41 @@ resource "github_repository_file" "repos-test" {
   content             = file("repos.csv")
   commit_message      = "repos for test and prod"
   overwrite_on_create = true
+}
+
+
+# DOCKERHUB
+
+provider "dockerhub" {
+  username = var.dockerhub_user
+  password = var.dockerhub_token
+}
+
+resource "dockerhub_repository" "project" {
+  name        = var.customer_name
+  namespace   = "odoopartners"
+  description = "Client ${var.customer_name} repository"
+  private = true
+}
+
+
+# JENKINS
+
+provider "jenkins" {
+  server_url = "https://jenkins-prod.ganemo.co/"
+  username = var.jenkins_user
+  password = var.jenkins_token
+}
+
+data "jenkins_folder" "customers" {
+    name = "CUSTOMER_PIPELINES"
+}
+
+resource "jenkins_job" "customer_job" {
+  name     = "${var.customer_name}-${var.app_name}"
+  folder   = data.jenkins_folder.customers.id
+  template = templatefile("job.xml", {
+    description = "Customer ${var.customer_name} multibranch pipeline"
+  })
 }
 

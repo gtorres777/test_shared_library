@@ -11,29 +11,15 @@ terraform {
 provider "github" {
   token = var.github_token
 }
-data "github_repository" "customer_name" {
-    full_name = "gtorres777/${var.customer_name}"
+data "github_repository" "terraform_customers" {
+    full_name = "gtorres777/terraform_customers"
 }
 
 resource "github_repository_file" "terraform_state" {
-  repository          = data.github_repository.customer_name.name
-  branch              = var.odoo_version
-  file                = "state_files/terraform.tfstate"
+  repository          = data.github_repository.terraform_customers.name
+  branch              = "main"
+  file                = "${var.customer_name}-${var.odoo_version}/terraform.tfstate"
   content             = file("previoustfstate")
   commit_message      = "terraform state file"
   overwrite_on_create = true
-
 }
-
-resource "github_repository_file" "terraform_state_lock" {
-
-  repository          = data.github_repository.customer_name.name
-  branch              = var.odoo_version
-  file                = "state_files/.terraform.lock.hcl"
-  content             = file("previoustflockstate")
-  commit_message      = "terraform state file"
-  overwrite_on_create = true
-
-}
-
-

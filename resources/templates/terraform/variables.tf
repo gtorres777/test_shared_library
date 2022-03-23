@@ -29,3 +29,7 @@ variable "odoo_version" {
 variable "test_branch" {
   description = "Name for the test branch in the github repository."
 }
+
+variable "app_name" {
+  description = "Odoo version for the customer."
+}

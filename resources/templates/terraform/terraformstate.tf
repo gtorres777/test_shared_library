@@ -18,7 +18,7 @@ data "github_repository" "terraform_customers" {
 resource "github_repository_file" "terraform_state" {
   repository          = data.github_repository.terraform_customers.name
   branch              = "main"
-  file                = "${var.customer_name}-${var.odoo_version}/terraform.tfstate"
+  file                = "terraform.tfstate.d/${var.customer_name}-${var.app_name}/terraform.tfstate"
   content             = file("previoustfstate")
   commit_message      = "terraform state file"
   overwrite_on_create = true
